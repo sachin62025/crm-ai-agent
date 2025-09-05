@@ -1,0 +1,9 @@
+langchain>=0.2.0
+langchain-openai>=0.1.7
+langchain-pinecone>=0.1.1
+pinecone-client>=4.1.0
+openai>=1.23.0
+python-dotenv>=1.0.0
+requests>=2.31.0
+tiktoken>=0.7.0
+langgraph
