@@ -1,4 +1,4 @@
-# Breeze AI Copilot 
+# Breeze AI Copilot
 
 Breeze AI is an intelligent, multi-agent copilot designed to provide end-to-end assistance across CRM workflows. It integrates with Pipedrive to assist with sales, marketing, and service tasks, leveraging Retrieval-Augmented Generation (RAG) for querying data and a powerful language model for content creation and task execution.
 
@@ -30,7 +30,7 @@ graph TD
 
     subgraph Core Logic
         SUP[🤖 Supervisor Agent]
-        SA[ salespeople Sales Agent]
+        SA[🧑‍💼 Sales Agent]
         MA[🎨 Marketing Agent]
         SE[👥 Service Agent]
     end
@@ -58,7 +58,10 @@ graph TD
     end
 
     %% Connections
-    UI & CLI & WH --> SUP;
+    UI --> SUP;
+    CLI --> SUP;
+    WH --> SUP;
+
     SUP -->|Routes Request| SA;
     SUP -->|Routes Request| MA;
     SUP -->|Routes Request| SE;
@@ -76,9 +79,15 @@ graph TD
     SE --> RESP;
 
     RAG --> VDB;
-    NOTE & STAT --> CRM;
+    NOTE --> CRM;
+    STAT --> CRM;
   
-    RAG & BLOG & EMAIL & RESP & RES --> LLM;
+    RAG --> LLM;
+    BLOG --> LLM;
+    EMAIL --> LLM;
+    RESP --> LLM;
+    RES --> LLM;
+
 ```
 
 ## Setup and Installation
@@ -126,7 +135,7 @@ PINECONE_INDEX_NAME="your-chosen-pinecone-index-name"
 
 # --- CRM Configuration ---
 PIPEDRIVE_API_TOKEN="your_pipedrive_api_token"
-PIPEDRIVE_COMPANY_DOMAIN="your-company-domain" # e.g., "my-company" if your URL is my-company.pipedrive.com
+PIPEDRIVE_COMPANY_DOMAIN="your-company-domain"  
 ```
 
 ## Running the Application
