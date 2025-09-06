@@ -97,14 +97,7 @@ import sys
 import gradio as gr
 from langchain_core.messages import HumanMessage
 import time
-
-# Add the 'src' directory to the Python path to import our modules
 sys.path.append('src')
-
-# --- IMPORTANT ---
-# This code now assumes that 'supervisor_graph' and 'validate_config'
-# are correctly defined in your 'src' directory and will be imported.
-# The MockSupervisor has been removed.
 from src.supervisor import supervisor_graph
 from src.config import validate_config
 
@@ -120,7 +113,6 @@ try:
 
 except Exception as e:
     print(f"❌ Critical Error on Startup: {e}")
-    # Exit if the core components can't be initialized
     sys.exit(1)
 
 # --- Core Chatbot Logic ---
@@ -153,7 +145,7 @@ def chat_responder(message, history):
              full_content = last_message.content
              for char in full_content:
                  response_stream += char
-                 time.sleep(0.005) # Adjust speed of streaming
+                 time.sleep(0.005) # speed of streaming
                  yield response_stream
     
     # If for some reason no agent responded, provide a fallback message
@@ -247,7 +239,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="blue", secondary_hue="sky"), cs
             [],
             elem_id="chatbot",
             bubble_full_width=False,
-            avatar_images=(None, "https://i.imgur.com/1j2a0hY.png"), # Bot avatar
+            avatar_images=(None, "bot.jpg"), 
             height=600,
             label="Breeze AI",
             show_label=False
