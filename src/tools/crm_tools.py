@@ -10,7 +10,7 @@ from src.crm_connector import create_note_on_deal, update_deal_status
 rag_chain = get_rag_chain()
 crm_rag_tool = Tool(
     name="CRM_Information_Lookup",
-    func=rag_chain.invoke, # Directly use the invoke method for cleaner call
+    func=rag_chain.invoke, 
     description="Use this tool to answer any questions about CRM deals, such as status, value, owner, or contacts. The input should be a clear question (e.g., 'What are the details of the deal for Acme Corp?')."
 )
 
@@ -35,7 +35,7 @@ def run_create_note_tool(tool_input: str) -> str:
     # The re.DOTALL flag is crucial to allow '.' to match newlines within the JSON content.
     match = re.search(r'\{.*\}', cleaned_input, re.DOTALL)
     if match:
-        json_str_to_parse = match.group(0) # Get the entire matched string, including braces
+        json_str_to_parse = match.group(0)  
     
     if json_str_to_parse is None:
         # If no direct {..} object was found, it's a severe parsing problem or bad LLM output

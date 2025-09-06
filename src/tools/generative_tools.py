@@ -3,7 +3,7 @@ from langchain_core.prompts import PromptTemplate
 from src.llm_connector import get_llm
 
 # This is a simple chain that will power our generative tools
-llm = get_llm(temperature=0.7) # Use a higher temperature for creative tasks
+llm = get_llm(temperature=0.7)  
 
 # --- Marketing Agent Tool ---
 marketing_prompt = PromptTemplate.from_template(
