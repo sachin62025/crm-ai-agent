@@ -239,7 +239,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="blue", secondary_hue="sky"), cs
             [],
             elem_id="chatbot",
             bubble_full_width=False,
-            avatar_images=(None, "bot.jpg"), 
+            avatar_images=(None, "src/img/bot.jpg"), 
             height=600,
             label="Breeze AI",
             show_label=False
