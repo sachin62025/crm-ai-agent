@@ -23,31 +23,31 @@ The Breeze AI Copilot operates on a supervised, multi-agent architecture. A cent
 ```mermaid
 graph TD
     subgraph User Interfaces
-        UI[🌐 Gradio Web App]
-        CLI[💻 Command Line]
-        WH[🔌 Pipedrive Webhook]
+        UI[ Gradio Web App]
+        CLI[ Command Line]
+        WH[ Pipedrive Webhook]
     end
 
     subgraph Core Logic
-        SUP[🤖 Supervisor Agent]
-        SA[🧑‍💼 Sales Agent]
-        MA[🎨 Marketing Agent]
-        SE[👥 Service Agent]
+        SUP[ Supervisor Agent]
+        SA[ Sales Agent]
+        MA[ Marketing Agent]
+        SE[ Service Agent]
     end
 
     subgraph Tools & Services
         subgraph Pipedrive Tools
-            RAG[🔎 CRM RAG Tool]
-            NOTE[📝 Create Note Tool]
-            STAT[🔄 Update Status Tool]
+            RAG[ CRM RAG Tool]
+            NOTE[ Create Note Tool]
+            STAT[ Update Status Tool]
         end
         subgraph Generative Tools
-            BLOG[📄 Blog Outline Tool]
-            EMAIL[✉️ Marketing Email Tool]
-            RESP[💬 Customer Response Tool]
+            BLOG[ Blog Outline Tool]
+            EMAIL[ Marketing Email Tool]
+            RESP[ Customer Response Tool]
         end
         subgraph Enrichment Tools
-            RES[🔬 Company Research Tool]
+            RES[ Company Research Tool]
         end
     end
 
@@ -171,8 +171,6 @@ Interact with the full multi-agent system directly from your terminal.
 ```bash
 python main.py
 ```
-
-
 
 ## Testing the Connection
 
