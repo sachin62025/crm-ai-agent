@@ -1,98 +1,3 @@
-# # app.py
-
-# import sys
-# import gradio as gr
-# from langchain_core.messages import HumanMessage
-
-# # Add the 'src' directory to the Python path to import our modules
-# sys.path.append('src')
-
-# from src.supervisor import supervisor_graph
-# from src.config import validate_config
-
-# # --- Initialization ---
-# print("--- Initializing Breeze AI Copilot ---")
-# try:
-#     # Validate that all config variables are loaded
-#     validate_config()
-#     # Initialize the supervisor graph, which is the brain of our application
-#     app_supervisor = supervisor_graph
-#     print("✅ Supervisor Graph initialized successfully.")
-# except Exception as e:
-#     print(f"❌ Critical Error on Startup: {e}")
-#     # Exit if the core components can't be initialized
-#     sys.exit(1)
-
-# # --- Core Chatbot Logic ---
-# def chat_responder(message, history):
-#     """
-#     This function is the core of the Gradio chat interface.
-#     It takes a user's message and the chat history, sends it to the supervisor agent,
-#     and streams the response back to the UI.
-#     """
-#     print(f"\n--- New Request Received ---")
-#     print(f"User Message: {message}")
-    
-#     # The input to the graph is a dictionary matching the AgentState
-#     initial_state = {"messages": [HumanMessage(content=message)]}
-    
-#     response_message = ""
-    
-#     # Stream events to see the flow of the graph in real-time
-#     print("Supervisor is routing the request...")
-#     for event in app_supervisor.stream(initial_state, stream_mode="values"):
-#         # The 'event' is the full state of the graph after a node has run
-#         last_message = event["messages"][-1]
-        
-#         # We only want to display the final output from the chosen agent
-#         if last_message.name and last_message.name != "supervisor":
-#              print(f"--- Output from: {last_message.name} ---")
-#              print(last_message.content)
-#              print("----------------------------------------")
-#              response_message = last_message.content
-    
-#     # If for some reason no agent responded, provide a fallback message
-#     if not response_message:
-#         response_message = "I'm sorry, I couldn't process that request. Please try rephrasing."
-        
-#     return response_message
-
-# # --- Build the Gradio UI ---
-# with gr.Blocks(theme=gr.themes.Default(primary_hue="blue"), title="Breeze AI Copilot") as demo:
-#     gr.Markdown(
-#         """
-#         # Breeze AI Copilot 🚀
-#         Your intelligent assistant for CRM tasks. 
-#         You can ask about deal statuses, ask for marketing content, or request customer service responses.
-#         """
-#     )
-#     gr.ChatInterface(
-#         fn=chat_responder,
-#         chatbot=gr.Chatbot(height=600),
-#         textbox=gr.Textbox(placeholder="e.g., What is the value of the deal with Global Logistics?", container=False, scale=7),
-#         title=None,
-#         examples=[
-#             "What are the details of the deal with EmpowerMove?",
-#             "Add a note to deal ID 5 saying 'Customer is ready for a final demo.'",
-#             "Update the status of deal ID 10 to 'won'",
-#             "Draft a blog post outline about 'The benefits of proactive customer service'",
-#             "Write a marketing email about our new feature: AI-powered analytics",
-#             "Draft a polite response to a customer asking about an invoice delay"
-#         ],
-#         cache_examples=False
-#     )
-
-# # --- Main entry point to run the server ---
-# if __name__ == "__main__":
-#     print("--- Launching Gradio Web UI ---")
-#     # The launch() method creates a web server and provides a public URL if needed.
-#     demo.launch()
-
-
-#------------------------------------------------------------------------------------
-
-# app.py
-
 import sys
 import gradio as gr
 from langchain_core.messages import HumanMessage
@@ -152,7 +57,6 @@ def chat_responder(message, history):
     if not response_stream:
         yield "I'm sorry, I couldn't process that request. Please try rephrasing."
 
-# --- Custom CSS for a modern look and feel ---
 custom_css = """
 /* General styling */
 body {
@@ -225,7 +129,6 @@ textarea:focus {
 # --- Build the Gradio UI with a modern theme and layout ---
 with gr.Blocks(theme=gr.themes.Soft(primary_hue="blue", secondary_hue="sky"), css=custom_css, title="Breeze AI Copilot") as demo:
     with gr.Column():
-        # Header Section
         with gr.Row():
             gr.HTML("""
                 <div class="header">
@@ -290,8 +193,6 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="blue", secondary_hue="sky"), cs
         bot, chatbot, chatbot
     )
 
-# --- Main entry point to run the server ---
 if __name__ == "__main__":
     print("--- Launching Gradio Web UI ---")
-    # The launch() method creates a web server and provides a public URL if needed.
     demo.launch(debug=True)
