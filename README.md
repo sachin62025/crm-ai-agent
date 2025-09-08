@@ -24,8 +24,6 @@ The Breeze AI Copilot operates on a supervised, multi-agent architecture. A cent
 graph TD
     subgraph User Interfaces
         UI[ Gradio Web App]
-        CLI[ Command Line]
-        WH[ Pipedrive Webhook]
     end
 
     subgraph Core Logic
@@ -59,13 +57,10 @@ graph TD
 
     %% Connections
     UI --> SUP;
-    CLI --> SUP;
-    WH --> SUP;
 
     SUP -->|Routes Request| SA;
     SUP -->|Routes Request| MA;
     SUP -->|Routes Request| SE;
-    WH -->|"Proactive Task"| SA;
 
     SA --> RAG;
     SA --> NOTE;
