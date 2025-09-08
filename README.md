@@ -172,21 +172,7 @@ Interact with the full multi-agent system directly from your terminal.
 python main.py
 ```
 
-#### C) RAG Q&A CLI
 
-For asking questions about your CRM data without the agentic layer.
-
-```bash
-python ask_copilot.py
-```
-
-#### D) Webhook Server for Proactive Enrichment
-
-This server listens for events from Pipedrive. To use it, you must configure a webhook in your Pipedrive settings to send a POST request to your server's public URL (e.g., using `ngrok`) whenever a new deal is created.
-
-```bash
-uvicorn webhook_server:app --host 0.0.0.0 --port 8000
-```
 
 ## Testing the Connection
 
