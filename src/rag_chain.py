@@ -34,7 +34,6 @@ def get_rag_chain():
     prompt = ChatPromptTemplate.from_template(template)
 
     # --- THIS IS THE CRITICAL FIX ---
-    # We force the LLM to be factual and not creative.
     llm = get_llm(temperature=0.0)
 
     # The rest of the chain is the same

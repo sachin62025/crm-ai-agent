@@ -70,7 +70,6 @@ def router(state):
 # --- Graph Definition (NO CHANGES NEEDED) ---
 graph = StateGraph(AgentState)
 graph.add_node("supervisor", router)
-# The node functions now correctly match what the agents return
 graph.add_node("Sales Agent", sales_agent_node)
 graph.add_node("Marketing Agent", marketing_agent_node)
 graph.add_node("Service Agent", service_agent_node)
