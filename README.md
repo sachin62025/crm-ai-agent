@@ -85,6 +85,10 @@ graph TD
 
 ```
 
+## Interface:
+
+![1757578782563](image/README/1757578782563.png)
+
 ## Setup and Installation
 
 Follow these steps to set up and run the Breeze AI Copilot on your local machine.
