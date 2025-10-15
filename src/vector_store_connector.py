@@ -3,6 +3,7 @@ from pinecone import Pinecone, ServerlessSpec
 # We need to import the config module from the same directory
 # import config
 from . import config
+
 # It's good practice to define the embedding dimensions here.
 EMBEDDING_DIMENSION = 4096
 
