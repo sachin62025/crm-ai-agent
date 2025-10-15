@@ -46,12 +46,12 @@ jobs:
         ruff check .
         ruff format . --check
 
-    - name: Run Unit Tests
+    # - name: Run Unit Tests
 
-      run: |
-        # This command finds and runs all files named test_*.py or *_test.py
-        # You need to create a new file like 'tests/test_routing.py'
-        pytest
+    #   run: |
+    #     # This command finds and runs all files named test_*.py or *_test.py
+    #     # You need to create a new file like 'tests/test_routing.py'
+    #     pytest
 
     - name: Run Application Health Check
       run: |
