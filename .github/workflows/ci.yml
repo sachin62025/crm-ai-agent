@@ -1,0 +1,60 @@
+# .github/workflows/ci.yml
+
+name: CRM AI Copilot CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+
+    steps:
+    - name: Checkout repository
+      # Checks out the repository code
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      # Sets up the Python environment
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      # Install the dependencies from requirements.txt
+      run: |
+        python -m pip install --upgrade pip
+        # Add pytest for robust testing (highly recommended)
+        pip install -r requirements.txt pytest ruff
+
+    - name: Create Mock .env Variables
+      run: |
+        echo "NEBIUS_API_KEY=mock-key" >> $GITHUB_ENV
+        echo "NEBIUS_API_BASE=http://mock-base" >> $GITHUB_ENV
+        echo "PINECONE_API_KEY=mock-pinecone" >> $GITHUB_ENV
+        echo "PIPEDRIVE_API_TOKEN=mock-pipedrive" >> $GITHUB_ENV
+        echo "PIPEDRIVE_COMPANY_DOMAIN=mock-domain" >> $GITHUB_ENV
+
+    - name: Run Static Code Analysis (Linting)
+      run: |
+        ruff check .
+        ruff format . --check
+
+    - name: Run Unit Tests
+
+      run: |
+        # This command finds and runs all files named test_*.py or *_test.py
+        # You need to create a new file like 'tests/test_routing.py'
+        pytest
+
+    - name: Run Application Health Check
+      run: |
+        python -c "from src.config import validate_config"
+        python -c "from src.supervisor import supervisor_graph"
+        echo "Application components initialized successfully."
