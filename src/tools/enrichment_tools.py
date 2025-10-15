@@ -2,12 +2,13 @@
 
 from langchain.tools import Tool
 
+
 def research_company(company_name: str) -> str:
     """
     Simulates researching a company to find key information and buyer intent signals.
-    In a real-world scenario, this function would connect to external APIs 
+    In a real-world scenario, this function would connect to external APIs
     (e.g., news APIs, financial data services, or company intelligence platforms).
-    
+
     Args:
         company_name (str): The name of the company to research.
 
@@ -15,7 +16,7 @@ def research_company(company_name: str) -> str:
         str: A summary of the research findings.
     """
     print(f"--- TOOL: Researching company: {company_name} ---")
-    
+
     # Simulate finding different data points based on the company name for testing
     if "innovate" in company_name.lower():
         return (
@@ -42,8 +43,9 @@ def research_company(company_name: str) -> str:
             f"- Key Contacts: Could not automatically identify key contacts."
         )
 
+
 company_research_tool = Tool(
     name="Company_Research_Tool",
     func=research_company,
-    description="Use this tool to research a company by its name. It provides a summary of the company's industry, recent news, buyer intent signals, and potential key contacts."
+    description="Use this tool to research a company by its name. It provides a summary of the company's industry, recent news, buyer intent signals, and potential key contacts.",
 )

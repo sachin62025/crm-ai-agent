@@ -5,17 +5,14 @@ import config
 BASE_URL = f"https://{config.PIPEDRIVE_COMPANY_DOMAIN}.pipedrive.com/api/v1"
 API_TOKEN = config.PIPEDRIVE_API_TOKEN
 
+
 def get_recent_deals(limit: int = 5):
     """
     Fetch recent deals from Pipedrive REST API.
     """
     try:
         url = f"{BASE_URL}/deals"
-        params = {
-            "api_token": API_TOKEN,
-            "sort": "add_time DESC",
-            "limit": limit
-        }
+        params = {"api_token": API_TOKEN, "sort": "add_time DESC", "limit": limit}
         response = requests.get(url, params=params)
         response.raise_for_status()
         data = response.json()
@@ -28,7 +25,7 @@ def get_recent_deals(limit: int = 5):
 def create_note_on_deal(deal_id: int, content: str):
     """
     Creates a new note associated with a specific deal ID in Pipedrive.
-    
+
     Args:
         deal_id (int): The ID of the deal to add the note to.
         content (str): The text content of the note.
@@ -39,10 +36,7 @@ def create_note_on_deal(deal_id: int, content: str):
     try:
         url = f"{BASE_URL}/notes"
         params = {"api_token": API_TOKEN}
-        payload = {
-            "content": content,
-            "deal_id": deal_id
-        }
+        payload = {"content": content, "deal_id": deal_id}
         response = requests.post(url, params=params, json=payload)
         response.raise_for_status()
         print(f"✅ Successfully created note on deal ID {deal_id}.")
@@ -51,10 +45,11 @@ def create_note_on_deal(deal_id: int, content: str):
         print(f"❌ Error creating note on deal ID {deal_id}: {e}")
         return None
 
+
 def update_deal_status(deal_id: int, status: str):
     """
     Updates the status of a specific deal in Pipedrive.
-    
+
     Args:
         deal_id (int): The ID of the deal to update.
         status (str): The new status. Must be one of 'open', 'won', 'lost'.
@@ -62,16 +57,16 @@ def update_deal_status(deal_id: int, status: str):
     Returns:
         dict: The API response from Pipedrive, or None if it failed.
     """
-    if status not in ['open', 'won', 'lost']:
-        print(f"❌ Invalid status provided: '{status}'. Must be 'open', 'won', or 'lost'.")
+    if status not in ["open", "won", "lost"]:
+        print(
+            f"❌ Invalid status provided: '{status}'. Must be 'open', 'won', or 'lost'."
+        )
         return None
-        
+
     try:
         url = f"{BASE_URL}/deals/{deal_id}"
         params = {"api_token": API_TOKEN}
-        payload = {
-            "status": status
-        }
+        payload = {"status": status}
         response = requests.put(url, params=params, json=payload)
         response.raise_for_status()
         print(f"✅ Successfully updated status for deal ID {deal_id} to '{status}'.")
@@ -79,8 +74,8 @@ def update_deal_status(deal_id: int, status: str):
     except Exception as e:
         print(f"❌ Error updating status for deal ID {deal_id}: {e}")
         return None
-    
-    
+
+
 if __name__ == "__main__":
     print("--- Running a direct test of the CRM Connector ---")
     deals = get_recent_deals()

@@ -7,13 +7,13 @@ from src.llm_connector import get_llm
 from src.embedding_client import get_embedding_model
 from src.config import PINECONE_INDEX_NAME
 
+
 def get_rag_chain():
     """
     Initializes and returns a fully configured RAG chain for CRM Q&A.
     """
     vectorstore = PineconeVectorStore(
-        index_name=PINECONE_INDEX_NAME, 
-        embedding=get_embedding_model()
+        index_name=PINECONE_INDEX_NAME, embedding=get_embedding_model()
     )
     retriever = vectorstore.as_retriever()
 
@@ -46,8 +46,9 @@ def get_rag_chain():
 
     return rag_chain
 
+
 # The direct test block remains the same
-if __name__ == '__main__':
+if __name__ == "__main__":
     print("--- Running a direct test of the RAG Chain ---")
     chain = get_rag_chain()
     print("✅ RAG chain created successfully.")

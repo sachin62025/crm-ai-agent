@@ -9,34 +9,53 @@ from src.agents.marketing_agent import get_marketing_agent
 from src.agents.service_agent import get_service_agent
 from src.llm_connector import get_llm
 
+
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], operator.add]
     next: str
+
 
 # Initialize the agents
 sales_agent = get_sales_agent()
 marketing_agent = get_marketing_agent()
 service_agent = get_service_agent()
 
+
 def get_last_human_message(state):
-    return state['messages'][-1].content
+    return state["messages"][-1].content
+
 
 # --- NO CHANGE NEEDED: The Sales Agent still returns a dictionary ---
 def sales_agent_node(state):
     result = sales_agent.invoke({"input": get_last_human_message(state)})
-    return {"messages": [BaseMessage(content=result["output"], type="assistant", name="Sales Agent")]}
+    return {
+        "messages": [
+            BaseMessage(content=result["output"], type="assistant", name="Sales Agent")
+        ]
+    }
+
 
 # --- FIX 1: The result from the new Marketing Agent is now a direct string ---
 def marketing_agent_node(state):
     result = marketing_agent.invoke({"input": get_last_human_message(state)})
     # The result is the final string content, so we use it directly.
-    return {"messages": [BaseMessage(content=result, type="assistant", name="Marketing Agent")]}
-    
+    return {
+        "messages": [
+            BaseMessage(content=result, type="assistant", name="Marketing Agent")
+        ]
+    }
+
+
 # --- FIX 2: Same fix for the new Service Agent node ---
 def service_agent_node(state):
     result = service_agent.invoke({"input": get_last_human_message(state)})
     # The result is the final string content, so we use it directly.
-    return {"messages": [BaseMessage(content=result, type="assistant", name="Service Agent")]}
+    return {
+        "messages": [
+            BaseMessage(content=result, type="assistant", name="Service Agent")
+        ]
+    }
+
 
 # --- Supervisor Chain (NO CHANGES NEEDED) ---
 members = ["Sales Agent", "Marketing Agent", "Service Agent"]
@@ -52,20 +71,29 @@ options = ["FINISH"] + members
 function_def = {
     "name": "route",
     "description": "Select the next agent to act or FINISH.",
-    "parameters": { "type": "object", "properties": { "next": {"type": "string", "enum": options} } },
+    "parameters": {
+        "type": "object",
+        "properties": {"next": {"type": "string", "enum": options}},
+    },
 }
-prompt = ChatPromptTemplate.from_messages([("system", system_prompt), ("human", "{messages}")])
+prompt = ChatPromptTemplate.from_messages(
+    [("system", system_prompt), ("human", "{messages}")]
+)
 llm = get_llm(temperature=0.0)
 supervisor_chain = prompt | llm.with_structured_output(function_def)
 
+
 def router(state):
     last_message = state["messages"][-1].content
-    route = supervisor_chain.invoke({
-        "members": ", ".join(members), 
-        "messages": [HumanMessage(content=last_message)]
-    })
+    route = supervisor_chain.invoke(
+        {
+            "members": ", ".join(members),
+            "messages": [HumanMessage(content=last_message)],
+        }
+    )
     print(f"\n--- SUPERVISOR DECISION ---\nRoute: {route}\n--- END DECISION ---\n")
-    return {"next": route['next']}
+    return {"next": route["next"]}
+
 
 # --- Graph Definition (NO CHANGES NEEDED) ---
 graph = StateGraph(AgentState)

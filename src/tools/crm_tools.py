@@ -1,24 +1,27 @@
 import json
-import re # <-- Add this import
+import re  # <-- Add this import
 from langchain.tools import Tool
 from pydantic import BaseModel, Field
 # from typing import Union, Dict
 
 from src.rag_chain import get_rag_chain
 from src.crm_connector import create_note_on_deal, update_deal_status
+
 # --- Tool 1: CRM Information Lookup (Unchanged, minor func direct call update) ---
 rag_chain = get_rag_chain()
 crm_rag_tool = Tool(
     name="CRM_Information_Lookup",
-    func=rag_chain.invoke, 
-    description="Use this tool to answer any questions about CRM deals, such as status, value, owner, or contacts. The input should be a clear question (e.g., 'What are the details of the deal for Acme Corp?')."
+    func=rag_chain.invoke,
+    description="Use this tool to answer any questions about CRM deals, such as status, value, owner, or contacts. The input should be a clear question (e.g., 'What are the details of the deal for Acme Corp?').",
 )
 
 # --- Tool 2: Create CRM Note (DEFINITIVE ROBUST VERSION) ---
 
+
 class CreateNoteInput(BaseModel):
     deal_id: int
     content: str
+
 
 def run_create_note_tool(tool_input: str) -> str:
     """
@@ -33,10 +36,10 @@ def run_create_note_tool(tool_input: str) -> str:
     # This regex looks for the content between the first '{' and the last '}'
     # It's designed to ignore leading/trailing non-JSON characters or extra text.
     # The re.DOTALL flag is crucial to allow '.' to match newlines within the JSON content.
-    match = re.search(r'\{.*\}', cleaned_input, re.DOTALL)
+    match = re.search(r"\{.*\}", cleaned_input, re.DOTALL)
     if match:
-        json_str_to_parse = match.group(0)  
-    
+        json_str_to_parse = match.group(0)
+
     if json_str_to_parse is None:
         # If no direct {..} object was found, it's a severe parsing problem or bad LLM output
         return f"Error: Critical: Could not extract a JSON object (missing braces) from the tool input. Received: '{tool_input}'"
@@ -60,21 +63,23 @@ def run_create_note_tool(tool_input: str) -> str:
     # --- Step 3: Validate with Pydantic and execute ---
     try:
         validated_input = CreateNoteInput(**input_dict)
-        
+
         result = create_note_on_deal(
-            deal_id=validated_input.deal_id, 
-            content=validated_input.content
+            deal_id=validated_input.deal_id, content=validated_input.content
         )
-        
+
         if result:
-            return f"Successfully created the note on deal ID {validated_input.deal_id}."
+            return (
+                f"Successfully created the note on deal ID {validated_input.deal_id}."
+            )
         else:
             return f"Failed to create the note on deal ID {validated_input.deal_id}. Pipedrive API returned no success data."
-            
+
     except Exception as e:
         # Catches Pydantic validation errors (e.g., if deal_id is not an int)
         # or issues with the create_note_on_deal function itself
         return f"An error occurred during note creation or validation: {e}. Parsed dict: {input_dict}"
+
 
 # The Tool definition (still no args_schema)
 create_crm_note_tool = Tool(
@@ -85,13 +90,16 @@ create_crm_note_tool = Tool(
         "The input to this tool MUST be a single, valid JSON string. "
         "The JSON string must contain two keys: 'deal_id' (which must be an integer) "
         "and 'content' (which must be a string)."
-    )
+    ),
 )
 
 
 class UpdateDealStatusInput(BaseModel):
     deal_id: int = Field(description="The integer ID of the deal to update.")
-    status: str = Field(description="The new status for the deal. Must be one of: 'open', 'won', or 'lost'.")
+    status: str = Field(
+        description="The new status for the deal. Must be one of: 'open', 'won', or 'lost'."
+    )
+
 
 def run_update_deal_status_tool(tool_input: str) -> str:
     """
@@ -99,12 +107,12 @@ def run_update_deal_status_tool(tool_input: str) -> str:
     logic as the proven create_crm_note tool.
     """
     cleaned_input = tool_input.strip()
-    match = re.search(r'\{.*\}', cleaned_input, re.DOTALL)
+    match = re.search(r"\{.*\}", cleaned_input, re.DOTALL)
     if not match:
         return f"Error: Could not extract a JSON object from the tool input. Received: '{tool_input}'"
-    
+
     json_str_to_parse = match.group(0)
-    
+
     try:
         input_dict = json.loads(json_str_to_parse)
     except json.JSONDecodeError:
@@ -115,7 +123,9 @@ def run_update_deal_status_tool(tool_input: str) -> str:
 
     try:
         validated_input = UpdateDealStatusInput(**input_dict)
-        result = update_deal_status(deal_id=validated_input.deal_id, status=validated_input.status)
+        result = update_deal_status(
+            deal_id=validated_input.deal_id, status=validated_input.status
+        )
         if result:
             return f"Successfully updated status for deal ID {validated_input.deal_id} to '{validated_input.status}'."
         else:
@@ -123,10 +133,11 @@ def run_update_deal_status_tool(tool_input: str) -> str:
     except Exception as e:
         return f"An error occurred during status update or validation: {e}. Parsed dict: {input_dict}"
 
+
 update_deal_status_tool = Tool(
     name="update_deal_status",
     func=run_update_deal_status_tool,
-    description="Use this tool to update the status of a specific CRM deal. The input must be a valid JSON string with 'deal_id' (integer) and 'status' (string: 'open', 'won', or 'lost') as keys."
+    description="Use this tool to update the status of a specific CRM deal. The input must be a valid JSON string with 'deal_id' (integer) and 'status' (string: 'open', 'won', or 'lost') as keys.",
 )
 
 # --- Final, Updated Toolbox (NO CHANGES) ---

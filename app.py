@@ -2,7 +2,8 @@ import sys
 import gradio as gr
 from langchain_core.messages import HumanMessage
 import time
-sys.path.append('src')
+
+sys.path.append("src")
 from src.supervisor import supervisor_graph
 from src.config import validate_config
 
@@ -20,6 +21,7 @@ except Exception as e:
     print(f"❌ Critical Error on Startup: {e}")
     sys.exit(1)
 
+
 # --- Core Chatbot Logic ---
 def chat_responder(message, history):
     """
@@ -32,30 +34,35 @@ def chat_responder(message, history):
 
     # The input to the graph is a dictionary matching the AgentState
     initial_state = {"messages": [HumanMessage(content=message)]}
-    
+
     response_stream = ""
-    
+
     # Stream events to see the flow of the graph in real-time
     print("Supervisor is routing the request...")
     for event in app_supervisor.stream(initial_state, stream_mode="values"):
         # The 'event' is the full state of the graph after a node has run
         last_message = event["messages"][-1]
-        
+
         # We only want to display the final output from the chosen agent
-        if hasattr(last_message, 'name') and last_message.name and last_message.name != "supervisor":
-             print(f"--- Output from: {last_message.name} ---")
-             print(last_message.content)
-             print("----------------------------------------")
-             # This part handles the streaming display in the UI
-             full_content = last_message.content
-             for char in full_content:
-                 response_stream += char
-                 time.sleep(0.005) # speed of streaming
-                 yield response_stream
-    
+        if (
+            hasattr(last_message, "name")
+            and last_message.name
+            and last_message.name != "supervisor"
+        ):
+            print(f"--- Output from: {last_message.name} ---")
+            print(last_message.content)
+            print("----------------------------------------")
+            # This part handles the streaming display in the UI
+            full_content = last_message.content
+            for char in full_content:
+                response_stream += char
+                time.sleep(0.005)  # speed of streaming
+                yield response_stream
+
     # If for some reason no agent responded, provide a fallback message
     if not response_stream:
         yield "I'm sorry, I couldn't process that request. Please try rephrasing."
+
 
 custom_css = """
 /* General styling */
@@ -127,7 +134,11 @@ textarea:focus {
 """
 
 # --- Build the Gradio UI with a modern theme and layout ---
-with gr.Blocks(theme=gr.themes.Soft(primary_hue="blue", secondary_hue="sky"), css=custom_css, title="Breeze AI Copilot") as demo:
+with gr.Blocks(
+    theme=gr.themes.Soft(primary_hue="blue", secondary_hue="sky"),
+    css=custom_css,
+    title="Breeze AI Copilot",
+) as demo:
     # Full-width header at the top
     gr.HTML("""
         <div class="header">
@@ -138,7 +149,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="blue", secondary_hue="sky"), cs
 
     with gr.Row():
         # Left Column: Features
-        with gr.Column(scale=1): # This column will take up 1/3 of the width
+        with gr.Column(scale=1):  # This column will take up 1/3 of the width
             gr.HTML("""
                 <div style="padding:20px; background:#fff; border-radius:15px; box-shadow:0 2px 8px rgba(0,0,0,0.07); margin-bottom:20px;">
                     <h2 style="color:#4a90e2; margin-bottom:10px;">✨ Features</h2>
@@ -154,11 +165,12 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="blue", secondary_hue="sky"), cs
                 </div>
             """)
             # You might want to add some space below the features if it looks too cramped with the window size
-            gr.HTML("<div style='height: 20px;'></div>") 
-
+            gr.HTML("<div style='height: 20px;'></div>")
 
         # Middle Column: Chatbot
-        with gr.Column(scale=2): # This column will take up 2/3 of the width, making it the widest
+        with gr.Column(
+            scale=2
+        ):  # This column will take up 2/3 of the width, making it the widest
             chatbot = gr.Chatbot(
                 [],
                 elem_id="chatbot",
@@ -166,7 +178,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="blue", secondary_hue="sky"), cs
                 avatar_images=(None, "src/static/bot.jpg"),
                 height=600,
                 label="Breeze AI",
-                show_label=False
+                show_label=False,
             )
 
             with gr.Row():
@@ -176,7 +188,9 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="blue", secondary_hue="sky"), cs
                     placeholder="e.g., What is the value of the deal with Global Logistics?",
                     container=False,
                 )
-                submit_btn = gr.Button("Send", variant="primary", scale=1, min_width=150)
+                submit_btn = gr.Button(
+                    "Send", variant="primary", scale=1, min_width=150
+                )
 
             gr.Examples(
                 examples=[
@@ -185,21 +199,30 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="blue", secondary_hue="sky"), cs
                     "Update the status of deal ID 10 to 'won'",
                     "Draft a blog post outline about 'The benefits of proactive customer service'",
                     "Write a marketing email about our new feature: AI-powered analytics",
-                    "Draft a polite response to a customer asking about an invoice delay"
+                    "Draft a polite response to a customer asking about an invoice delay",
                 ],
                 inputs=txt,
-                label="Click on an example to run it"
+                label="Click on an example to run it",
             )
 
-                # Right Column: Tools Used
+            # Right Column: Tools Used
         import gradio as gr
 
         # Function to generate Tools Used section
         def render_tools_used():
             tools = [
-                {"name": "Gradio", "logo": "https://images.seeklogo.com/logo-png/51/1/gradio-logo-png_seeklogo-515011.png"},
-                {"name": "LangChain", "logo": "https://avatars.githubusercontent.com/u/61469645?s=200&v=4"},
-                {"name": "Python", "logo": "https://cdn-icons-png.flaticon.com/512/5968/5968350.png"},
+                {
+                    "name": "Gradio",
+                    "logo": "https://images.seeklogo.com/logo-png/51/1/gradio-logo-png_seeklogo-515011.png",
+                },
+                {
+                    "name": "LangChain",
+                    "logo": "https://avatars.githubusercontent.com/u/61469645?s=200&v=4",
+                },
+                {
+                    "name": "Python",
+                    "logo": "https://cdn-icons-png.flaticon.com/512/5968/5968350.png",
+                },
             ]
 
             html_content = """
@@ -211,9 +234,9 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="blue", secondary_hue="sky"), cs
             for tool in tools:
                 html_content += f"""
                     <li>
-                        <img src="{tool['logo']}" alt="{tool['name']}" 
+                        <img src="{tool["logo"]}" alt="{tool["name"]}" 
                             style="height:40px;vertical-align:middle;margin-right:12px;">
-                        {tool['name']}
+                        {tool["name"]}
                     </li>
                 """
 
@@ -223,12 +246,10 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="blue", secondary_hue="sky"), cs
             """
             return html_content
 
-
         # Example usage in your layout
         with gr.Column(scale=1):  # Right column
             gr.HTML(render_tools_used())
             gr.HTML("<div style='height: 20px;'></div>")
-
 
     # --- Event Listeners for Chat Functionality ---
     def user(user_message, history):

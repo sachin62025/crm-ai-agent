@@ -1,6 +1,7 @@
 from langchain_core.runnables import RunnableLambda
 from src.tools.generative_tools import marketing_email_tool, marketing_tool
 
+
 # This agent needs to decide between two tools: drafting an email or an outline.
 # We will create a simple routing logic.
 def marketing_router(input_data):
@@ -17,10 +18,11 @@ def marketing_router(input_data):
         # Otherwise, default to the blog post outline tool.
         return marketing_tool.invoke(user_input)
 
+
 def get_marketing_agent():
     """
     Initializes and returns the Marketing Agent.
-    
+
     This is now a simple, robust chain that directly routes to the correct tool
     instead of a complex ReAct agent. This avoids parsing errors with long outputs.
     """

@@ -3,7 +3,7 @@ from langchain_core.prompts import PromptTemplate
 from src.llm_connector import get_llm
 
 # This is a simple chain that will power our generative tools
-llm = get_llm(temperature=0.7)  
+llm = get_llm(temperature=0.7)
 
 # --- Marketing Agent Tool ---
 marketing_prompt = PromptTemplate.from_template(
@@ -11,14 +11,16 @@ marketing_prompt = PromptTemplate.from_template(
 )
 marketing_chain = marketing_prompt | llm
 
+
 def generate_blog_outline(topic: str) -> str:
     """A tool to generate blog post outlines."""
     return marketing_chain.invoke({"topic": topic}).content
 
+
 marketing_tool = Tool(
     name="Blog_Post_Outline_Generator",
     func=generate_blog_outline,
-    description="Use this tool to generate a blog post outline on a given topic. The input should be the topic of the blog."
+    description="Use this tool to generate a blog post outline on a given topic. The input should be the topic of the blog.",
 )
 
 # --- Service Agent Tool ---
@@ -29,14 +31,16 @@ service_prompt = PromptTemplate.from_template(
 )
 service_chain = service_prompt | llm
 
+
 def draft_customer_response(query: str) -> str:
     """A tool to draft customer service email responses."""
     return service_chain.invoke({"query": query}).content
 
+
 service_tool = Tool(
     name="Customer_Response_Drafter",
     func=draft_customer_response,
-    description="Use this tool to draft a response to a customer's question. The input should be the customer's full question."
+    description="Use this tool to draft a response to a customer's question. The input should be the customer's full question.",
 )
 
 
@@ -45,12 +49,14 @@ email_prompt = PromptTemplate.from_template(
 )
 email_chain = email_prompt | llm
 
+
 def draft_marketing_email(topic: str) -> str:
     """A tool to draft marketing emails."""
     return email_chain.invoke({"topic": topic}).content
 
+
 marketing_email_tool = Tool(
     name="Marketing_Email_Drafter",
     func=draft_marketing_email,
-    description="Use this tool to draft a marketing email on a given topic. The input should be a string describing the purpose or topic of the email."
+    description="Use this tool to draft a marketing email on a given topic. The input should be a string describing the purpose or topic of the email.",
 )

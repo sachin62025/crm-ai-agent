@@ -33,27 +33,25 @@ Question: {input}
 Thought:{agent_scratchpad}
 """
 
+
 def get_sales_agent():
     """
     Initializes and returns the Sales Agent executor using the reliable
     ReAct agent type, which is compatible with a wide range of LLMs.
     """
-    llm = get_llm(temperature=0.0) # ReAct agents work best with precise LLMs
+    llm = get_llm(temperature=0.0)  # ReAct agents work best with precise LLMs
     tools = sales_agent_tools
-    
+
     prompt = PromptTemplate.from_template(AGENT_PROMPT_TEMPLATE).partial(
         tools=render_text_description(tools),
         tool_names=", ".join([t.name for t in tools]),
     )
-    
+
     # We are back to using the reliable 'create_react_agent'
     agent = create_react_agent(llm, tools, prompt)
-    
+
     agent_executor = AgentExecutor(
-        agent=agent, 
-        tools=tools, 
-        verbose=True,
-        handle_parsing_errors=True
+        agent=agent, tools=tools, verbose=True, handle_parsing_errors=True
     )
-    
+
     return agent_executor
