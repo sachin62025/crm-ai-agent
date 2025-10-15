@@ -27,7 +27,7 @@ def chat_responder(message, history):
     It takes a user's message and the chat history, sends it to the supervisor agent,
     and streams the response back to the UI.
     """
-    print(f"\n--- New Request Received ---")
+
     print(f"User Message: {message}")
 
     # The input to the graph is a dictionary matching the AgentState
