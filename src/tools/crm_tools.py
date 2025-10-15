@@ -2,7 +2,7 @@ import json
 import re # <-- Add this import
 from langchain.tools import Tool
 from pydantic import BaseModel, Field
-from typing import Union, Dict
+# from typing import Union, Dict
 
 from src.rag_chain import get_rag_chain
 from src.crm_connector import create_note_on_deal, update_deal_status
