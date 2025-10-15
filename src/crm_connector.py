@@ -1,6 +1,7 @@
 # import os
 import requests
-import config
+# import config
+from . import config
 
 BASE_URL = f"https://{config.PIPEDRIVE_COMPANY_DOMAIN}.pipedrive.com/api/v1"
 API_TOKEN = config.PIPEDRIVE_API_TOKEN

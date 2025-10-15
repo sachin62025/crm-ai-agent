@@ -1,6 +1,7 @@
 import requests
 import json
-from src import config
+# from src import config
+from . import config
 
 
 # This custom class bypasses the problematic LangChain client and makes a direct,
