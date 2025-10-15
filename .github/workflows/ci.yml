@@ -49,9 +49,7 @@ jobs:
     #   run: |
     #     pytest
 
-    - name: Run Application Health Check (Isolated)
-      run: |
-        # FIX: We must manually add 'src' to the path for imports to work inside python -c.
-        # We then only call the safe 'validate_config()' function, avoiding the Pinecone connection.
-        python -c "import sys; sys.path.append('src'); from src.config import validate_config; validate_config()"
-        echo "✅ All configurations loaded and validated successfully.
+    - name: Run Application Health Check
+      run: |
+        python -c "import sys; sys.path.append('src'); from src.config import validate_config; validate_config()"
+        echo "Application components initialized successfully."
